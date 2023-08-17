@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600&family=Stick+No+Bills:wght@500&display=swap" rel="stylesheet">
+    <title>SUIT GAME</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 162, 255, 0.63);
+        }
+
+        #box_player1, #box_player2 {
+            margin: 10%;
+            padding: 4px;
+            display: grid;
+            text-align: center;
+            background-color: white;
+        }
+
+        #box_player1 h3 { background-color: rgb(0, 163, 0); color:white; padding: 5px;}
+        #box_player2 h3 { background-color: rgb(163, 0, 0); color:white; padding: 5px;}
+
+        #box_player1 button, #box_player2 button {
+            color: white;
+            border: none;
+            padding: 8px;
+            text-align: center;
+            background-color: rgb(255, 94, 0);
+            letter-spacing: 3px;
+        }
+
+        .start {
+            background-color: rgb(0, 81, 255);
+            padding: 10px;
+            border-radius: 50%;
+            color: white;
+            position: absolute;
+        }
+
+        .score_p1, .score_p2 { padding: 5px; }
+
+        .box_score {
+            position: absolute;
+            margin-top: -200px;
+            display: flex;
+            align-items: center;
+            color: white;
+            background-color: rgb(0, 60, 255);
+            border: 2px solid white;
+        }
+
+        @media (max-width: 500px){
+            main {
+                top: 0;
+                bottom: 0;
+                right: 0;
+                left: 0;
+                position: fixed;
+                display: grid;
+            }
+            #box_player1, #box_player2 {
+                transform: rotate(90deg);
+                margin: 0%;
+            }
+            #box_player1 img, #box_player2 img {
+                width: 120px;
+                margin: auto;
+            }
+            .start {
+                transform: rotate(90deg);
+                left: 50%;
+            }
+            .box_score {
+                transform: rotate(90deg);
+                margin-top: 0;
+                right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <span class="box_score">
+            <p style="background-color: rgb(0, 163, 0); padding: 5px">P1</p>
+            <span class="score_p1"></span> : <span class="score_p2"></span>
+            <p style="background-color: rgb(163, 0, 0); padding: 5px">P2</p>
+        </span>
+
+        <span class="start"><h3>GO</h3></span>
+
+        <div id="box_player1">
+            <h3>Player 1</h3>
+            <img id="img_player1" src="kertas.png" width="100px">
+            <button onclick="player1()">STOP</button>
+        </div>
+        <div id="box_player2">
+            <h3>Player 2</h3>
+            <img id="img_player2" src="batu.png" width="100px">
+            <button onclick="player2()">STOP</button>
+        </div>
+    </main>
+
+    <script>
+
+        let randomIndex_1, randomIndex_2;
+        let p1, p2;
+
+        const player_1 = [
+            "kertas.png",
+            "gunting.png",
+            "batu.png"
+        ];
+
+        const player_2 = [
+            "batu.png",
+            "gunting.png",
+            "kertas.png"
+        ];
+
+        document.querySelector(".start").addEventListener("click", function(){
+            p1 = setInterval(function (){
+                randomIndex_1 = Math.floor(Math.random() * player_1.length);
+
+                img_player1.src = player_1[randomIndex_1];
+            }, 100);
+
+            p2 = setInterval(function (){
+                randomIndex_2 = Math.floor(Math.random() * player_2.length);
+
+                img_player2.src = player_2[randomIndex_2];
+            }, 100);
+        });
+
+        let hasil_p1, hasil_p2;
+
+        let click_btn = 0;
+
+        function player1(){
+            clearInterval(p1);
+            hasil_p1 = player_1[randomIndex_1];
+            click_btn = click_btn += 1;
+
+            if(click_btn % 2 == 0){
+                tampilkan();
+            }
+        }
+
+        function player2(){
+            clearInterval(p2);
+            hasil_p2 = player_2[randomIndex_2];
+            click_btn = click_btn += 1;
+
+            if(click_btn % 2 == 0){
+                tampilkan();
+            }
+        }
+
+        let score_p1 = 0;
+        let score_p2 = 0;
+
+        function tampilkan(){
+
+            let status;
+
+            if(hasil_p1 == hasil_p2){
+                status = "SERI";
+            }else if(hasil_p1 == "kertas.png"){
+                hasil_p2 == "batu.png" ? status = "P1 WIN" : status = "P2 WIN";
+            }else if(hasil_p1 == "gunting.png"){
+                hasil_p2 == "kertas.png" ? status = "P1 WIN" : status = "P2 WIN";
+            }else if(hasil_p1 == "batu.png"){
+                hasil_p2 == "gunting.png" ? status = "P1 WIN" : status = "P2 WIN";
+            }
+
+            status == "P1 WIN" ? score_p1 = (score_p1 += 1) : score_p1 = score_p1;
+            status == "P2 WIN" ? score_p2 = (score_p2 += 1) : score_p2 = score_p2;
+
+            document.querySelector(".score_p1").innerHTML = score_p1;
+            document.querySelector(".score_p2").innerHTML = score_p2;
+        }
+
+    </script>
+</body>
+</html>
